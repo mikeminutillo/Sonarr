@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
 
@@ -28,7 +30,6 @@ namespace NzbDrone.Common.Http
         private readonly Logger _logger;
         private readonly IRateLimitService _rateLimitService;
         private readonly ICached<CookieContainer> _cookieContainerCache;
-        private readonly ICached<bool> _curlTLSFallbackCache;
         private readonly List<IHttpRequestInterceptor> _requestInterceptors;
         private readonly IHttpDispatcher _httpDispatcher;
 
@@ -133,7 +134,7 @@ namespace NzbDrone.Common.Http
                 return cookieContainer;
             }
         }
-
+        
         private void HandleResponseCookies(HttpRequest request, CookieContainer cookieContainer)
         {
             if (!request.StoreResponseCookie)

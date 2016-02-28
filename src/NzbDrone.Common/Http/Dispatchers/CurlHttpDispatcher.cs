@@ -65,7 +65,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                         return s * n;
                     };
                     
-                    curlEasy.Url = request.Url.AbsoluteUri;
+                    curlEasy.Url = request.Url.ToString();
                     switch (request.Method)
                     {
                         case HttpMethod.GET:
@@ -96,11 +96,10 @@ namespace NzbDrone.Common.Http.Dispatchers
                         curlEasy.Cookie = cookies.GetCookieHeader(request.Url);
                     }
 
-                    if (!request.Body.IsNullOrWhiteSpace())
+                    if (request.ContentData != null)
                     {
-                        // TODO: This might not go well with encoding.
-                        curlEasy.PostFieldSize = request.Body.Length;
-                        curlEasy.SetOpt(CurlOption.CopyPostFields, request.Body);
+                        curlEasy.PostFieldSize = request.ContentData.Length;
+                        curlEasy.SetOpt(CurlOption.CopyPostFields, request.ContentData);
                     }
 
                     // Yes, we have to keep a ref to the object to prevent corrupting the unmanaged state

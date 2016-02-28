@@ -65,11 +65,11 @@ namespace NzbDrone.Common.Test.Http
         public void should_execute_simple_post()
         {
             var request = new HttpRequest("http://eu.httpbin.org/post");
-            request.Body = "{ my: 1 }";
+            request.SetContent("{ my: 1 }");
 
             var response = Subject.Post<HttpBinResource>(request);
 
-            response.Resource.Data.Should().Be(request.Body);
+            response.Resource.Data.Should().Be("{ my: 1}");
         }
 
         [TestCase("gzip")]
@@ -162,7 +162,7 @@ namespace NzbDrone.Common.Test.Http
         public void should_send_cookie()
         {
             var request = new HttpRequest("http://eu.httpbin.org/get");
-            request.AddCookie("my", "cookie");
+            request.Cookies["my"] = "cookie";
 
             var response = Subject.Get<HttpBinResource>(request);
 
@@ -176,7 +176,7 @@ namespace NzbDrone.Common.Test.Http
         public void GivenOldCookie()
         {
             var oldRequest = new HttpRequest("http://eu.httpbin.org/get");
-            oldRequest.AddCookie("my", "cookie");
+            oldRequest.Cookies["my"] = "cookie";
 
             var oldClient = new HttpClient(new IHttpRequestInterceptor[0], Mocker.Resolve<ICacheManager>(), Mocker.Resolve<IRateLimitService>(), Mocker.Resolve<IHttpDispatcher>(), Mocker.Resolve<Logger>());
 
@@ -260,7 +260,7 @@ namespace NzbDrone.Common.Test.Http
             var requestSet = new HttpRequest("http://eu.httpbin.org/cookies/set?my=cookie");
             requestSet.AllowAutoRedirect = false;
             requestSet.StoreResponseCookie = true;
-            requestSet.AddCookie("my", "oldcookie");
+            requestSet.Cookies["my"] = "oldcookie";
 
             var responseSet = Subject.Get(requestSet);
 
@@ -375,6 +375,21 @@ namespace NzbDrone.Common.Test.Http
             finally
             {
             }
+        }
+
+        public void should_submit_formparameters_in_body()
+        {
+            Assert.Fail();
+        }
+
+        public void should_submit_attachments_as_multipart()
+        {
+            Assert.Fail();
+        }
+
+        public void should_submit_formparameters_as_multipart_if_attachments_exist()
+        {
+            Assert.Fail();
         }
     }
 
