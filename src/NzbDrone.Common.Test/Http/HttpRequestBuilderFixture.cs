@@ -34,7 +34,7 @@ namespace NzbDrone.Common.Test.Http
 
             var request = builder.Resource("/v1/").Build();
 
-            request.Url.ToString().Should().Be("http://domain/v1/");
+            request.Url.AbsoluteUri.Should().Be("http://domain/v1/");
 
         }
     }

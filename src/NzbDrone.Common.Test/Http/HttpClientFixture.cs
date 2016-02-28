@@ -58,7 +58,7 @@ namespace NzbDrone.Common.Test.Http
 
             var response = Subject.Get<HttpBinResource>(request);
 
-            response.Resource.Url.Should().Be(request.Url.ToString());
+            response.Resource.Url.Should().Be(request.Url.AbsoluteUri);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace NzbDrone.Common.Test.Http
 
             var response = Subject.Post<HttpBinResource>(request);
 
-            response.Resource.Data.Should().Be("{ my: 1}");
+            response.Resource.Data.Should().Be("{ my: 1 }");
         }
 
         [TestCase("gzip")]
@@ -322,10 +322,10 @@ namespace NzbDrone.Common.Test.Http
             {
                 // the date is bad in the below - should be 13-Jul-2016
                 string malformedCookie = @"__cfduid=d29e686a9d65800021c66faca0a29b4261436890790; expires=Wed, 13-Jul-16 16:19:50 GMT; path=/; HttpOnly";
-                string url = "http://eu.httpbin.org/response-headers?Set-Cookie=" +
-                    System.Uri.EscapeUriString(malformedCookie);
+                var requestSet = new HttpRequestBuilder("http://eu.httpbin.org/response-headers")
+                    .AddQueryParam("Set-Cookie", malformedCookie).
+                    Build();
 
-                var requestSet = new HttpRequest(url);
                 requestSet.AllowAutoRedirect = false;
                 requestSet.StoreResponseCookie = true;
 

@@ -65,7 +65,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                         return s * n;
                     };
                     
-                    curlEasy.Url = request.Url.ToString();
+                    curlEasy.Url = request.Url.AbsoluteUri;
                     switch (request.Method)
                     {
                         case HttpMethod.GET:
@@ -99,7 +99,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                     if (request.ContentData != null)
                     {
                         curlEasy.PostFieldSize = request.ContentData.Length;
-                        curlEasy.SetOpt(CurlOption.CopyPostFields, request.ContentData);
+                        curlEasy.SetOpt(CurlOption.CopyPostFields, new string(Array.ConvertAll(request.ContentData, v => (char)v)));
                     }
 
                     // Yes, we have to keep a ref to the object to prevent corrupting the unmanaged state
