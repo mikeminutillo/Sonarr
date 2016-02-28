@@ -336,7 +336,6 @@
     <Compile Include="Download\Clients\Deluge\DelugeError.cs" />
     <Compile Include="Download\Clients\Deluge\DelugeException.cs" />
     <Compile Include="Download\Clients\Deluge\DelugeProxy.cs" />
-    <Compile Include="Download\Clients\Deluge\DelugeResponse.cs" />
     <Compile Include="Download\Clients\Deluge\DelugeSettings.cs" />
     <Compile Include="Download\Clients\Deluge\DelugeTorrent.cs" />
     <Compile Include="Download\Clients\Deluge\DelugeTorrentStatus.cs" />
@@ -346,7 +345,6 @@
     <Compile Include="Download\Clients\DownloadClientException.cs" />
     <Compile Include="Download\Clients\Nzbget\ErrorModel.cs" />
     <Compile Include="Download\Clients\Nzbget\JsonError.cs" />
-    <Compile Include="Download\Clients\Nzbget\JsonRequest.cs" />
     <Compile Include="Download\Clients\Nzbget\Nzbget.cs" />
     <Compile Include="Download\Clients\Nzbget\NzbgetCategory.cs" />
     <Compile Include="Download\Clients\Nzbget\NzbgetConfigItem.cs" />
@@ -388,13 +386,12 @@
     <Compile Include="Download\Clients\NzbVortex\Responses\NzbVortexVersionResponse.cs" />
     <Compile Include="Download\Clients\Pneumatic\Pneumatic.cs" />
     <Compile Include="Download\Clients\Pneumatic\PneumaticSettings.cs" />
-    <Compile Include="Download\Clients\qBittorrent\DigestAuthenticator.cs" />
     <Compile Include="Download\Clients\rTorrent\RTorrentDirectoryValidator.cs" />
-    <Compile Include="Download\Clients\qBittorrent\QBittorrent.cs" />
-    <Compile Include="Download\Clients\qBittorrent\QBittorrentPriority.cs" />
-    <Compile Include="Download\Clients\qBittorrent\QBittorrentProxy.cs" />
-    <Compile Include="Download\Clients\qBittorrent\QBittorrentSettings.cs" />
-    <Compile Include="Download\Clients\qBittorrent\QBittorrentTorrent.cs" />
+    <Compile Include="Download\Clients\QBittorrent\QBittorrent.cs" />
+    <Compile Include="Download\Clients\QBittorrent\QBittorrentPriority.cs" />
+    <Compile Include="Download\Clients\QBittorrent\QBittorrentProxy.cs" />
+    <Compile Include="Download\Clients\QBittorrent\QBittorrentSettings.cs" />
+    <Compile Include="Download\Clients\QBittorrent\QBittorrentTorrent.cs" />
     <Compile Include="Download\Clients\Sabnzbd\JsonConverters\SabnzbdPriorityTypeConverter.cs" />
     <Compile Include="Download\Clients\Sabnzbd\JsonConverters\SabnzbdStringArrayConverter.cs" />
     <Compile Include="Download\Clients\Sabnzbd\JsonConverters\SabnzbdQueueTimeConverter.cs" />
