@@ -231,15 +231,27 @@ namespace NzbDrone.Common.Http
             return this;
         }
 
-        public virtual HttpRequestBuilder AddQueryParam(string key, object value)
+        public virtual HttpRequestBuilder AddQueryParam(string key, object value, bool replace = false)
         {
+            if (replace)
+            {
+                QueryParams.RemoveAll(v => v.Key == key);
+                SuffixQueryParams.RemoveAll(v => v.Key == key);
+            }
+
             QueryParams.Add(key, value.ToString());
 
             return this;
         }
 
-        public virtual HttpRequestBuilder AddSuffixQueryParam(string key, object value)
+        public virtual HttpRequestBuilder AddSuffixQueryParam(string key, object value, bool replace = false)
         {
+            if (replace)
+            {
+                QueryParams.RemoveAll(v => v.Key == key);
+                SuffixQueryParams.RemoveAll(v => v.Key == key);
+            }
+
             SuffixQueryParams.Add(new KeyValuePair<string, string>(key, value.ToString()));
 
             return this;
