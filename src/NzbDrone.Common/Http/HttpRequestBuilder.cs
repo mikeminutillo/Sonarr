@@ -17,7 +17,9 @@ namespace NzbDrone.Common.Http
         public List<KeyValuePair<string, string>> QueryParams { get; private set; }
         public List<KeyValuePair<string, string>> SuffixQueryParams { get; private set; }
         public Dictionary<string, string> Segments { get; private set; }
-        public bool SupressHttpError { get; set; }
+        public HttpHeader Headers { get; private set; }
+        public bool SuppressHttpError { get; set; }
+        public bool AllowAutoRedirect { get; set; }
         public NetworkCredential NetworkCredential { get; set; }
         public Dictionary<string, string> Cookies { get; private set; }
         public List<HttpFormData> FormData { get; private set; }
@@ -32,6 +34,7 @@ namespace NzbDrone.Common.Http
             QueryParams = new List<KeyValuePair<string, string>>();
             SuffixQueryParams = new List<KeyValuePair<string, string>>();
             Segments = new Dictionary<string, string>();
+            Headers = new HttpHeader();
             Cookies = new Dictionary<string, string>();
             FormData = new List<HttpFormData>();
         }
@@ -60,6 +63,7 @@ namespace NzbDrone.Common.Http
             clone.QueryParams = new List<KeyValuePair<string, string>>(clone.QueryParams);
             clone.SuffixQueryParams = new List<KeyValuePair<string, string>>(clone.SuffixQueryParams);
             clone.Segments = new Dictionary<string, string>(clone.Segments);
+            clone.Headers = new HttpHeader(clone.Headers);
             clone.Cookies = new Dictionary<string, string>(clone.Cookies);
             clone.FormData = new List<HttpFormData>(clone.FormData);
             return clone;
@@ -92,8 +96,14 @@ namespace NzbDrone.Common.Http
         protected virtual void Apply(HttpRequest request)
         {
             request.Method = Method;
-            request.SuppressHttpError = SupressHttpError;
+            request.SuppressHttpError = SuppressHttpError;
+            request.AllowAutoRedirect = AllowAutoRedirect;
             request.NetworkCredential = NetworkCredential;
+
+            foreach (var header in Headers)
+            {
+                request.Headers.Set(header.Key, header.Value);
+            }
 
             foreach (var cookie in Cookies)
             {
@@ -227,6 +237,13 @@ namespace NzbDrone.Common.Http
         public virtual HttpRequestBuilder Accept(HttpAccept accept)
         {
             HttpAccept = accept;
+
+            return this;
+        }
+
+        public virtual HttpRequestBuilder SetHeader(string name, string value)
+        {
+            Headers.Set(name, value);
 
             return this;
         }

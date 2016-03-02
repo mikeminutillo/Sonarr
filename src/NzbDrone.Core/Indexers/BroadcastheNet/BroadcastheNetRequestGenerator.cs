@@ -174,7 +174,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var builder = new JsonRpcRequestBuilder(Settings.BaseUrl)
                 .Call("getTorrents", Settings.ApiKey, parameters, PageSize, 0);
-            builder.SupressHttpError = true;
+            builder.SuppressHttpError = true;
 
             for (var page = 0; page < maxPages;page++)
             {
