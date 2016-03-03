@@ -134,7 +134,7 @@ namespace NzbDrone.Common.Http
                 return cookieContainer;
             }
         }
-        
+
         private void HandleResponseCookies(HttpRequest request, CookieContainer cookieContainer)
         {
             if (!request.StoreResponseCookie)

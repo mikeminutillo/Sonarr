@@ -163,22 +163,12 @@ namespace NzbDrone.Core.Download.Clients.Deluge
         {
             var protocol = settings.UseSsl ? "https" : "http";
 
-            string url;
-            if (!settings.UrlBase.IsNullOrWhiteSpace())
-            {
-                url = string.Format(@"{0}://{1}:{2}/{3}/json", protocol, settings.Host, settings.Port, settings.UrlBase.Trim('/'));
-            }
-            else
-            {
-                url = string.Format(@"{0}://{1}:{2}/json", protocol, settings.Host, settings.Port);
-            }
+            string url = HttpRequestBuilder.BuildBaseUrl(settings.UseSsl, settings.Host, settings.Port, settings.UrlBase.Trim('/'));
 
             var builder = new JsonRpcRequestBuilder(url);
-
-            var httpRequest = new HttpRequest(url, HttpAccept.Json);
-
-#warning FIXME: Had a 15sec timeout.
-            //restClient.Timeout = 15000;
+            
+            builder.Resource("json");
+            builder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             AuthenticateClient(builder, settings);
 
@@ -249,11 +239,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
 
             var cookies = _authCookieCache.Find(authKey);
 
-            if (cookies != null && !reauthenticate)
-            {
-                requestBuilder.SetCookies(cookies);
-            }
-            else
+            if (cookies == null || reauthenticate)
             {
                 _authCookieCache.Remove(authKey);
 
@@ -274,6 +260,10 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 requestBuilder.SetCookies(cookies);
 
                 ConnectDaemon(requestBuilder);
+            }
+            else
+            {
+                requestBuilder.SetCookies(cookies);
             }
         }
 

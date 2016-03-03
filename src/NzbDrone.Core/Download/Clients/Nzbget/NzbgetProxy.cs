@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
+using System.Net;
 
 namespace NzbDrone.Core.Download.Clients.Nzbget
 {
@@ -152,13 +153,10 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
 
         private T ProcessRequest<T>(NzbgetSettings settings, string method, params object[] parameters)
         {
-            var baseUrl = string.Format("{0}://{1}:{2}/jsonrpc",
-                                 settings.UseSsl ? "https" : "http",
-                                 settings.Host,
-                                 settings.Port);
+            var baseUrl = HttpRequestBuilder.BuildBaseUrl(settings.UseSsl, settings.Host, settings.Port, "jsonrpc");
 
             var builder = new JsonRpcRequestBuilder(baseUrl, method, parameters);
-            builder.NetworkCredential = new System.Net.NetworkCredential(settings.Username, settings.Password);
+            builder.NetworkCredential = new NetworkCredential(settings.Username, settings.Password);
 
             var httpRequest = builder.Build();
 
@@ -169,7 +167,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new DownloadClientException("Authentication failed for NzbGet, please check your settings", ex);
                 }

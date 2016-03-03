@@ -29,8 +29,6 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
         private readonly ICached<Dictionary<string, string>> _authCookieCache;
-        private readonly TimeSpan _loginTimeout = TimeSpan.FromSeconds(10);
-
 
         public QBittorrentProxy(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
         {
@@ -174,11 +172,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
             var cookies = _authCookieCache.Find(authKey);
 
-            if (cookies != null && !reauthenticate)
-            {
-                requestBuilder.SetCookies(cookies);
-            }
-            else
+            if (cookies == null || reauthenticate)
             {
                 _authCookieCache.Remove(authKey);
 
@@ -203,7 +197,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
                     throw;
                 }
-                
+
                 if (response.Content != "Ok.") // returns "Fails." on bad login
                 {
                     _logger.Debug("qbitTorrent authentication failed.");
@@ -215,9 +209,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 cookies = response.GetCookies();
 
                 _authCookieCache.Set(authKey, cookies);
-
-                requestBuilder.SetCookies(cookies);
             }
+
+            requestBuilder.SetCookies(cookies);
         }
     }
 }

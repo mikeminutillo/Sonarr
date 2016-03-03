@@ -86,6 +86,11 @@ namespace NzbDrone.Common.Http.Dispatchers
                     curlEasy.UserAgent = UserAgentBuilder.UserAgent;
                     curlEasy.FollowLocation = request.AllowAutoRedirect;
 
+                    if (request.RequestTimeout != TimeSpan.Zero)
+                    {
+                        curlEasy.Timeout = (int)Math.Ceiling(request.RequestTimeout.TotalSeconds);
+                    }
+
                     if (OsInfo.IsWindows)
                     {
                         curlEasy.CaInfo = "curl-ca-bundle.crt";

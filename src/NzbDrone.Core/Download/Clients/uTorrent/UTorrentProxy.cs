@@ -204,12 +204,7 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             var cookies = _authCookieCache.Find(authKey);
             var authToken = _authTokenCache.Find(authKey);
 
-            if (cookies != null && authToken != null && !reauthenticate)
-            {
-                requestBuilder.SetCookies(cookies);
-                requestBuilder.AddQueryParam("token", authToken, true);
-            }
-            else
+            if (cookies == null || authToken == null || reauthenticate)
             {
                 _authCookieCache.Remove(authKey);
                 _authTokenCache.Remove(authKey);
@@ -242,10 +237,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
 
                 _authCookieCache.Set(authKey, cookies);
                 _authTokenCache.Set(authKey, authToken);
-
-                requestBuilder.SetCookies(cookies);
-                requestBuilder.AddQueryParam("token", authToken, true);
             }
+
+            requestBuilder.SetCookies(cookies);
+            requestBuilder.AddQueryParam("token", authToken, true);
         }
     }
 }

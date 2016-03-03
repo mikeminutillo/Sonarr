@@ -192,17 +192,13 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
             var sessionId = _authSessionIDCache.Find(authKey);
 
-            if (sessionId != null && !reauthenticate)
-            {
-                requestBuilder.SetHeader("X-Transmission-Session-Id", sessionId);
-            }
-            else
+            if (sessionId == null || reauthenticate)
             {
                 _authSessionIDCache.Remove(authKey);
 
                 var authLoginRequest = BuildRequest(settings).Build();
                 authLoginRequest.SuppressHttpError = true;
-                
+
                 var response = _httpClient.Execute(authLoginRequest);
                 if (response.StatusCode == HttpStatusCode.MovedPermanently)
                 {
@@ -227,9 +223,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
                 _logger.Debug("Transmission authentication succeeded.");
 
                 _authSessionIDCache.Set(authKey, sessionId);
-                
-                requestBuilder.SetHeader("X-Transmission-Session-Id", sessionId);
             }
+
+            requestBuilder.SetHeader("X-Transmission-Session-Id", sessionId);
         }
         
         public TransmissionResponse ProcessRequest(string action, object arguments, TransmissionSettings settings)
